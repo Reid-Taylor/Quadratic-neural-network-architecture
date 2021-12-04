@@ -8,10 +8,12 @@ class quadraticNeuralNetwork(convolutionalNeuralNetwork):
         parameters = {}
         L = len(layer_dims) #number of layers
         for l in range(1,L):
-            parameters['W'+str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * .01 # i by j matrix for weight matrix
-            parameters['b'+str(l)] = np.zeros(shape=(layer_dims[l],1)) # i by 1 vector for bias 'vector'
-            assert(parameters['W'+str(l)].shape == (layer_dims[l], layer_dims[l-1]))
-            assert(parameters['b'+str(l)].shape == (layer_dims[l], 1))
+            parameters["V"+str(l)] = np.random.randn(layer_dims[l-1], layer_dims[l], layer_dims[l-1]) * .01 # j by i by j tensor
+            parameters['W'+str(l)] = np.random.randn(1, layer_dims[l], layer_dims[l-1]) * .01 # i by j matrix for weight tensor
+            parameters['b'+str(l)] = np.zeros(shape=(1, layer_dims[l], 1)) # i by 1 vector for bias 'vector'
+            assert(parameters['V'+str(l)].shape == (layer_dims[l-1], layer_dims[l], layer_dims[l-1]))
+            assert(parameters['W'+str(l)].shape == (1, layer_dims[l], layer_dims[l-1]))
+            assert(parameters['b'+str(l)].shape == (1, layer_dims[l], 1))
 
         return parameters
     
