@@ -5,19 +5,19 @@ import matplotlib.pyplot as plt
 class convolutionalNeuralNetwork:
     def __init__(self, dims, learning_rate=0.05, iterations=1000, print_costs=True):
         self.layer_dims = dims
-        self.parameters = self.initialize_parameters_deep(self.layer_dims)
+        self.parameters = self.initialize_parameters_deep()
         self.learning_rate = learning_rate
         self.num_iterations = iterations
         self.print_costs = print_costs
 
-    def initialize_parameters_deep(layer_dims): #vector
+    def initialize_parameters_deep(self): #vector
         parameters = {}
-        L = len(layer_dims) #number of layers
+        L = len(self.layer_dims) #number of layers
         for l in range(1,L):
-            parameters['W'+str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * .01 # i by j matrix for weight matrix
-            parameters['b'+str(l)] = np.zeros(shape=(layer_dims[l],1)) # i by 1 vector for bias 'vector'
-            assert(parameters['W'+str(l)].shape == (layer_dims[l], layer_dims[l-1]))
-            assert(parameters['b'+str(l)].shape == (layer_dims[l], 1))
+            parameters['W'+str(l)] = np.random.randn(self.layer_dims[l], self.layer_dims[l-1]) * .01 # i by j matrix for weight matrix
+            parameters['b'+str(l)] = np.zeros(shape=(self.layer_dims[l],1)) # i by 1 vector for bias 'vector'
+            assert(parameters['W'+str(l)].shape == (self.layer_dims[l], self.layer_dims[l-1]))
+            assert(parameters['b'+str(l)].shape == (self.layer_dims[l], 1))
 
         return parameters
     
@@ -42,7 +42,7 @@ class convolutionalNeuralNetwork:
             A, cache = self.linear_activation_forward(A_prev,
                 self.parameters["W"+str(l)],
                 self.parameters["b"+str(l)],
-                activation = 'relu'
+                activation='relu'
                 )
             caches.append(cache)
         AL, cache = self.linear_activation_forward(A,
@@ -51,15 +51,16 @@ class convolutionalNeuralNetwork:
             activation='sigmoid'
             )
         caches.append(cache)
+        print([AL.shape, X.shape])
         assert(AL.shape == (1, X.shape[1]))
         return AL, caches
 
     def linear_forward(self, A, W, b):
-        Z = np.dot(W, A) + b
-        
+        Z = np.matmul(W, A) + b
+
         assert(Z.shape == (W.shape[0], A.shape[1]))
         cache = (A, W, b)
-        
+
         return Z, cache
 
     def compute_cost(self, AL, Y):
@@ -135,20 +136,20 @@ class convolutionalNeuralNetwork:
         plt.title('learning rate =' + str(self.learning_rate))
         plt.show()
     
-    def sigmoid(Z):
+    def sigmoid(self, Z):
         A = 1/(1+np.exp(-Z))
         cache = Z
         
         return A, cache
 
-    def relu(Z):
+    def relu(self, Z):
         A = np.maximum(0,Z)
         
         assert(A.shape == Z.shape)
         cache = Z 
         return A, cache
 
-    def relu_backward(dA, cache):
+    def relu_backward(self, dA, cache):
         Z = cache
         dZ = np.array(dA, copy=True)
         
@@ -157,7 +158,7 @@ class convolutionalNeuralNetwork:
         assert (dZ.shape == Z.shape)
         return dZ
 
-    def sigmoid_backward(dA, cache):
+    def sigmoid_backward(self, dA, cache):
         Z = cache
         
         s = 1/(1+np.exp(-Z))
