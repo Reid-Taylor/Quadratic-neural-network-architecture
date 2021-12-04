@@ -3,11 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class convolutionalNeuralNetwork:
-    def __init__(self, dims, learning_rate=0.05, iterations=1000):
+    def __init__(self, dims, learning_rate=0.05, iterations=1000, print_costs=True):
         self.layer_dims = dims
         self.parameters = self.initialize_parameters_deep(self.layer_dims)
         self.learning_rate = learning_rate
         self.num_iterations = iterations
+        self.print_costs = print_costs
 
     def initialize_parameters_deep(layer_dims): #vector
         parameters = {}
