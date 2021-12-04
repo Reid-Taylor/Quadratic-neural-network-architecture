@@ -51,8 +51,7 @@ class convolutionalNeuralNetwork:
             activation='sigmoid'
             )
         caches.append(cache)
-        print([AL.shape, X.shape])
-        assert(AL.shape == (1, X.shape[1]))
+        assert(AL.shape == X.shape)
         return AL, caches
 
     def linear_forward(self, A, W, b):
@@ -98,9 +97,10 @@ class convolutionalNeuralNetwork:
         m = AL.shape[1]
         Y = Y.reshape(AL.shape)
 
-        dAL = dAL = - (np.divide(Y, AL) - np.divide(1-Y, 1-AL ))
+        dAL = - (np.divide(Y, AL) - np.divide(1-Y, 1-AL ))
 
         current_cache = caches[-1]
+        print(current_cache[0])
         grads["dA"+str(L)], grads["dW"+str(L)], grads["db"+str(L)] = self.linear_backward(self.sigmoid_backward(dAL, current_cache[1]), current_cache[0])
 
         for l in reversed(range(L-1)):
@@ -164,5 +164,6 @@ class convolutionalNeuralNetwork:
         s = 1/(1+np.exp(-Z))
         dZ = dA * s * (1-s)
         
-        assert (dZ.shape == Z.shape)    
+        assert (dZ.shape == Z.shape)
+        print(dZ.shape)
         return dZ
