@@ -4,12 +4,6 @@ import matplotlib.pyplot as plt
 from cnnClass import convolutionalNeuralNetwork
 
 class quadraticNeuralNetwork(convolutionalNeuralNetwork):
-    def __init__(self):
-        self.layer_dims = 'cat'
-        self.parameters = self.initialize_parameters_deep(self.layer_dims)
-        self.learning_rate = 0.4
-        self.num_iterations = 1000
-
     def initialize_parameters_deep(layer_dims): #vector
         parameters = {}
         L = len(layer_dims) #number of layers
