@@ -103,7 +103,7 @@ class convolutionalNeuralNetwork:
 
         for l in reversed(range(L-1)):
             current_cache = caches[1]
-            dA_prev_temp, dW_temp, db_temp = self.linear_backward(self.sigmoid_backward(dAL, current_cache[1], current_cache[0]))
+            dA_prev_temp, dW_temp, db_temp = self.linear_backward(self.sigmoid_backward(dAL, current_cache[1]), current_cache[0])
             grads["dA" + str(l + 1)] = dA_prev_temp
             grads["dW" + str(l + 1)] = dW_temp
             grads["db" + str(l + 1)] = db_temp
