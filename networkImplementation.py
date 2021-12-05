@@ -1,5 +1,5 @@
 from networks import Network
-from layers import Layer, FCLayer, ActivationLayer, PostQuadLayer, QuadraticLayer
+from layers import Layer, FCLayer, ActivationLayer, QuadraticLayer, QuadraticLayerMath
 from activations import tanh, tanh_prime, mse, mse_prime
 
 from keras.datasets import mnist
@@ -25,13 +25,13 @@ y_test = np_utils.to_categorical(y_test)
 
 # Network
 net = Network()
-net.add(FCLayer(28*28, 100))                # input_shape=(1, 28*28)    ;   output_shape=(1, 100)
+net.add(FCLayer(28*28, 25))                # input_shape=(1, 28*28)    ;   output_shape=(1, 100)
 net.add(ActivationLayer(tanh, tanh_prime))
-net.add(FCLayer(100, 50))                   # input_shape=(1, 100)      ;   output_shape=(1, 50)
+# net.add(FCLayer(100, 50))                   # input_shape=(1, 100)      ;   output_shape=(1, 50)
+# net.add(ActivationLayer(tanh, tanh_prime))
+net.add(QuadraticLayer(25, 10))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
 net.add(ActivationLayer(tanh, tanh_prime))
-net.add(QuadraticLayer(50, 10))                   # input_shape=(1, 50)      ;   output_shape=(1, 15)
-net.add(ActivationLayer(tanh, tanh_prime))
-# net.add(PostQuadLayer(15, 10))                    # input_shape=(1, 15)       ;   output_shape=(1, 10)
+# net.add(PostQuadLayer(15, 10))                   # input_shape=(1, 15)       ;   output_shape=(1, 10)
 # net.add(ActivationLayer(tanh, tanh_prime))
 
 # train on 1000 samples
