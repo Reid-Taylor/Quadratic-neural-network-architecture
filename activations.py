@@ -12,25 +12,23 @@ def tanh(x):
 def tanh_prime(x):
     return 1-np.tanh(x)**2
 
-def sigmoid(Z):
-    return 1/(1+np.exp(-Z))
+def relu(x):
+    return np.maximum(0,x)
 
-def relu(Z):
-    return np.maximum(0,Z)
+def relu_prime(x):
+    x[x>=0] = 1
+    x[x<0] = 0
+    return x
 
-def relu_backward(dA, cache):
-    Z = cache
-    dZ = np.array(dA, copy=True)
-    
-    dZ[Z <= 0] = 0
-    
-    assert (dZ.shape == Z.shape)
-    return dZ
+def identity(x):
+    return x
 
-def sigmoid_backward(dA, cache):
-    Z = cache
-        
-    s = 1/(1+np.exp(-Z))
-    dZ = dA * s * (1-s)
+def identity_prime(x):
+    return 1
 
-    return dZ
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+
+def sigmoid_prime(x):        
+    sigmoid = 1/(1+np.exp(-x))
+    return sigmoid * (1-sigmoid)
