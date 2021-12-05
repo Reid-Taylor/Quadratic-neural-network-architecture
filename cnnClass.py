@@ -97,7 +97,7 @@ class convolutionalNeuralNetwork:
         m = AL.shape[1]
         Y = Y.reshape(AL.shape)
 
-        dAL = - (np.divide(Y, AL) - np.divide(1-Y, 1-AL ))
+        dAL = - (np.divide(Y, AL) - np.divide(1-Y, 1-AL))
 
         current_cache = caches[-1]
         print(current_cache[0])
