@@ -29,19 +29,6 @@ class FCLayer(Layer):
         self.bias -= learning_rate * output_error
         return input_error
 
-class ActivationLayer(Layer):
-    def __init__(self, activation, activation_prime):
-        self.activation = activation
-        self.activation_prime = activation_prime
-    
-    def forward_propagation(self, input_data):
-        self.input = input_data
-        self.output = self.activation(self.input)
-        return self.output
-
-    def backward_propagation(self, output_error, learning_rate):
-        return self.activation_prime(self.input) * output_error
-
 class QuadraticLayer(Layer):
     def __init__(self, input_size, output_size):
         self.quadWeights = np.random.rand(input_size, output_size, input_size) - 0.5
@@ -61,3 +48,16 @@ class QuadraticLayer(Layer):
         self.weights -= learning_rate * weights_error
         self.bias -= learning_rate * output_error
         return input_error
+
+class ActivationLayer(Layer):
+    def __init__(self, activation, activation_prime):
+        self.activation = activation
+        self.activation_prime = activation_prime
+    
+    def forward_propagation(self, input_data):
+        self.input = input_data
+        self.output = self.activation(self.input)
+        return self.output
+
+    def backward_propagation(self, output_error, learning_rate):
+        return self.activation_prime(self.input) * output_error
