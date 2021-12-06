@@ -1,8 +1,7 @@
 import numpy as np
 
 class Network:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.layers = []
         self.loss = None
         self.loss_prime = None

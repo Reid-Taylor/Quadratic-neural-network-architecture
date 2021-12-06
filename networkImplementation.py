@@ -31,24 +31,21 @@ y_test = np_utils.to_categorical(y_test)
 SAMPLES = 10000
 # ------------- Generate Dataset ------------------------
 X = np.reshape(np.linspace(0, 1, SAMPLES),(SAMPLES, 1))
-Y = np.reshape(np.exp(X), (SAMPLES,1))
+Y = np.ones(X.shape)
 
 # ----------- split dataset into training set and test set -------------------------------------------
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(X,Y,train_size=.85)
 
 # Network
-# net = Network('net')
-# net.add(FCLayer(1, 50))                # input_shape=(1, 28*28)    ;   output_shape=(1, 100)
-# net.add(ActivationLayer(tanh, tanh_prime))
-# net.add(QuadraticLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
+net = Network()
+net.add(FCLayer(1, 50))                # input_shape=(1, 1)    ;   output_shape=(1, 50)
+net.add(ActivationLayer(tanh, tanh_prime))
+
+# net.add(QuadraticLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
 # net.add(ActivationLayer(sigmoid, sigmoid_prime))
 
-# Network
-net = Network('net')
-net.add(FCLayer(1, 50))                # input_shape=(1, 28*28)    ;   output_shape=(1, 50)
-net.add(ActivationLayer(tanh, tanh_prime))
-net.add(FCLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
+net.add(FCLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
 net.add(ActivationLayer(sigmoid, sigmoid_prime))
 
 # train on 1000 samples
@@ -65,11 +62,12 @@ print("true values : ")
 print(y_test[0:3])
 import matplotlib.pyplot as plt
 plt.plot(errorArray.keys(), errorArray.values())
-plt.title('Neural Network -- Exponential Function')
+plt.title('Neural Network -- Constant Function')
 plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.xlim([0,51])
 plt.ylim([0,1])
 plt.xticks(np.arange(0, 51, step=5))
-plt.savefig('NN-exponential.png', dpi=400)
+plt.figtext(0.5, 0.15, f"Final Error: {round(list(errorArray.values())[-1],6)*100}%", ha="center", fontsize=10, bbox={"facecolor":"orange", "alpha":0.5, "pad":5})
+plt.savefig('NN-constant.png', dpi=400)
 plt.show()
