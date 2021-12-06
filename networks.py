@@ -1,7 +1,8 @@
 import numpy as np
 
 class Network:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.layers = []
         self.loss = None
         self.loss_prime = None
@@ -38,4 +39,4 @@ class Network:
                     error = layer.backward_propagation(error, learning_rate)
             
             err /= samples
-            print('epoch %f/%f  |  error= %f' % (i+1, epochs, err))
+            print(self.name + ': epoch %f/%f  |  error= %f' % (i+1, epochs, err))

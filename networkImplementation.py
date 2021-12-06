@@ -24,21 +24,36 @@ x_test /= 255
 y_test = np_utils.to_categorical(y_test)
 
 # Network
-net = Network()
+quad = Network('quad')
+quad.add(FCLayer(28*28, 100))                # input_shape=(1, 28*28)    ;   output_shape=(1, 100)
+quad.add(ActivationLayer(tanh, tanh_prime))
+# quad.add(FCLayer(100, 50))                   # input_shape=(1, 100)      ;   output_shape=(1, 50)
+# quad.add(ActivationLayer(tanh, tanh_prime))
+quad.add(QuadraticLayer(100, 10))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
+quad.add(ActivationLayer(sigmoid, sigmoid_prime))
+
+# train on 1000 samples
+# as we didn't implemented mini-batch GD, training will be pretty slow if we update at each iteration on 60000 samples...
+quad.set_loss(mse, mse_prime)
+quad.fit(x_train[0:1000], y_train[0:1000], epochs=35, learning_rate=0.11)
+
+# Network
+net = Network('net')
 net.add(FCLayer(28*28, 100))                # input_shape=(1, 28*28)    ;   output_shape=(1, 100)
 net.add(ActivationLayer(tanh, tanh_prime))
 # net.add(FCLayer(100, 50))                   # input_shape=(1, 100)      ;   output_shape=(1, 50)
 # net.add(ActivationLayer(tanh, tanh_prime))
-net.add(QuadraticLayer(100, 10))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
+net.add(FCLayer(100, 10))                    # input_shape=(1, 50)      ;   output_shape=(1, 15)
 net.add(ActivationLayer(sigmoid, sigmoid_prime))
 
 # train on 1000 samples
 # as we didn't implemented mini-batch GD, training will be pretty slow if we update at each iteration on 60000 samples...
 net.set_loss(mse, mse_prime)
-net.fit(x_train[0:1000], y_train[0:1000], epochs=35, learning_rate=0.08)
+net.fit(x_train[0:1000], y_train[0:1000], epochs=35, learning_rate=0.11)
+
 
 # test on 3 samples
-out = net.predict(x_test[0:3])
+out = quad.predict(x_test[0:3])
 print("\n")
 print("predicted values : ")
 print(out, end="\n")
