@@ -31,22 +31,20 @@ y_test = np_utils.to_categorical(y_test)
 SAMPLES = 10000
 # ------------- Generate Dataset ------------------------
 X = np.reshape(np.linspace(0, 1, SAMPLES),(SAMPLES, 1))
-Y = np.ones(X.shape)
-
+Y = X**2
 # ----------- split dataset into training set and test set -------------------------------------------
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(X,Y,train_size=.85)
 
 # Network
 net = Network()
-net.add(FCLayer(1, 50))                # input_shape=(1, 1)    ;   output_shape=(1, 50)
+net.add(FCLayer(1, 5))                # input_shape=(1, 1)    ;   output_shape=(1, 50)
 net.add(ActivationLayer(tanh, tanh_prime))
-
-# net.add(QuadraticLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
-# net.add(ActivationLayer(sigmoid, sigmoid_prime))
-
-net.add(FCLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
+net.add(QuadraticLayer(5, 2))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
 net.add(ActivationLayer(sigmoid, sigmoid_prime))
+
+# net.add(FCLayer(50, 1))                    # input_shape=(1, 50)      ;   output_shape=(1, 1)
+# net.add(ActivationLayer(sigmoid, sigmoid_prime))
 
 # train on 1000 samples
 # as we didn't implemented mini-batch GD, training will be pretty slow if we update at each iteration on 60000 samples...
@@ -69,5 +67,5 @@ plt.xlim([0,51])
 plt.ylim([0,1])
 plt.xticks(np.arange(0, 51, step=5))
 plt.figtext(0.5, 0.15, f"Final Error: {round(list(errorArray.values())[-1],6)*100}%", ha="center", fontsize=10, bbox={"facecolor":"orange", "alpha":0.5, "pad":5})
-plt.savefig('NN-constant.png', dpi=400)
+# plt.savefig('NN-constant.png', dpi=400)
 plt.show()

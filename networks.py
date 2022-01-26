@@ -40,5 +40,5 @@ class Network:
             
             err /= samples
             errorArray[str(i)] = (err)
-            print(self.name + ': epoch %f/%f  |  error= %f' % (i+1, epochs, err))
+            print('Training: epoch %f/%f  |  error= %f' % (i+1, epochs, err))
         return errorArray

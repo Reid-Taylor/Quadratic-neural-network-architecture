@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.matlib import eye
 
 class Layer: #interface with which to define layers
     def __init__(self):
@@ -31,6 +32,26 @@ class FCLayer(Layer):
 
 class QuadraticLayer(Layer):
     def __init__(self, input_size, output_size):
+        self.input_size = input_size
+        self.output_size = output_size
+        self.quadWeights = np.random.rand(input_size, output_size, input_size) - 0.5
+        self.bias = np.zeros((1,output_size))
+    
+    def forward_propagation(self, input_data):
+        self.input = input_data
+        self.output = np.tensordot(np.squeeze(np.tensordot(self.input, self.quadWeights, axes=1)),self.input.T,axes=1).T + self.bias
+        return self.output
+    
+    def backward_propagation(self, output_error, learning_rate):
+        e = np.matlib.eye(n=self.output_size, M=self.input_size)
+        input_error = np.dot(output_error, np.squeeze(np.tensordot(np.dot(output_error, e), self.quadWeights,axes=(1,0))))
+        quad_weights_error = np.tensordot(self.input.T, np.expand_dims(np.dot(output_error.T,self.input), axis=0), axes=(1,0))
+        self.quadWeights -= learning_rate * quad_weights_error
+        self.bias -= learning_rate * output_error
+        return input_error
+
+class ExponentialLayer(Layer):
+    def __init__(self, input_size, output_size):
         self.quadWeights = np.random.rand(input_size, output_size, input_size) - 0.5
         self.weights = np.random.rand(input_size, output_size) - 0.5
         self.bias = np.zeros((1,output_size))
@@ -48,6 +69,43 @@ class QuadraticLayer(Layer):
         self.weights -= learning_rate * weights_error
         self.bias -= learning_rate * output_error
         return input_error
+
+class PowerLayer(Layer):
+    def __init__(self, input_size, output_size):
+        self.powerWeights = np.random.rand(input_size, output_size, input_size) - 0.5
+        self.powerBase = np.full((1,output_size), (1/output_size))
+        self.power = np.random.random()
+        self.bias = np.zeros((1,output_size))
+    
+    def forward_propagation(self, input_data):
+        self.input = input_data
+        self.output = self.input ** self.power + self.bias
+        return self.output
+    
+    def backward_propagation(self, output_error, learning_rate):
+        input_error = output_error ** self.power
+        power_error = np.dot(self.input.T, output_error)
+
+        self.power -= learning_rate * power_error
+        self.bias -= learning_rate * output_error
+        return input_error
+
+class SinLayer(Layer):
+    def __init__(self, input_size, output_size):
+        self.powerWeights = np.random.rand(input_size, output_size, input_size) - 0.5
+        self.powerBase = np.full((1,output_size), (1/output_size))
+        self.bias = np.zeros((1,output_size))
+    
+    def forward_propagation(self, input_data):
+        self.input = input_data
+        # self.output = 
+        return self.output
+    
+    def backward_propagation(self, output_error, learning_rate):
+        # input_error = np.dot(output_error, self.weights.T)
+        #for powerWeightsError consider the laGrange Error Bound...
+        self.bias -= learning_rate * output_error
+        # return input_error
 
 class ActivationLayer(Layer):
     def __init__(self, activation, activation_prime):
