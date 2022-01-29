@@ -1,4 +1,7 @@
 import numpy as np
+import time
+
+from sklearn.feature_selection import f_regression
 
 class Network:
     def __init__(self):
@@ -27,7 +30,11 @@ class Network:
     def fit(self, x_train, y_train, epochs, learning_rate):
         samples = len(x_train)
         errorArray = {}
+        tensorArray = {}
+        checkemall = []
+        delta = []
         for i in range(epochs):
+            start_time = time.time()
             err = 0
             for j in range(samples):
                 output = x_train[j]
@@ -36,9 +43,17 @@ class Network:
                 err += self.loss(y_train[j], output)
                 error = self.loss_prime(y_train[j], output)
                 for layer in reversed(self.layers):
-                    error = layer.backward_propagation(error, learning_rate)
+                    (error, tensorw) = layer.backward_propagation(error, learning_rate)
+                    if (tensorw.__class__ != str) : checkemall.append(tensorw)
             
             err /= samples
             errorArray[str(i)] = (err)
             print('Training: epoch %f/%f  |  error= %f' % (i+1, epochs, err))
-        return errorArray
+            delta.append(time.time() - start_time)
+            if (len(checkemall)):
+                tensorArray[str(i)] = (np.count_nonzero(np.around(checkemall[-1], decimals=2)))
+                print('Weight Tensor: %f' % (np.count_nonzero(np.around(checkemall[-1], decimals=2))))
+            
+        if (len(checkemall)):
+            return (errorArray, tensorArray, tensorw, delta)
+        return (errorArray, delta)
