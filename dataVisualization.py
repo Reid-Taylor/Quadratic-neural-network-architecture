@@ -59,8 +59,8 @@ bestEpochs.reset_index()
 fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10,10))
 
 #make color green for quad and red for conventional for all plots
-axes[0,0].plot(epochs['epoch'].sort_values(), epochs['training_error'].sort_values(), color='r', label='Conventional')
-axes[0,0].plot(qEpochs['epoch'].sort_values(), qEpochs['training_error'].sort_values(), color='g', label='Quadratic')
+axes[0,0].plot(epochs['epoch'].sort_values(), epochs['training_error'].sort_values(), 'ro', markersize=3, label='Conventional')
+axes[0,0].plot(qEpochs['epoch'].sort_values(), qEpochs['training_error'].sort_values(), 'gx', markersize=3, label='Quadratic')
 axes[0,0].set_title('Accuracy over Epochs')
 axes[0,0].set_ylabel('Accuracy (%)')
 axes[0,0].set_xlabel('Epoch')
@@ -77,7 +77,7 @@ axes[0,1].set_xlabel('Accuracy (%)')
 # axes[2,0].set_xticks(np.arange(0,51, step=5))
 
 #make color green for quad and red for conventional for all plots
-axes[1,0].scatter(bestQEpochs['total_time']/60, bestQEpochs['training_error'], color='g',label='Quadratic')
+axes[1,0].scatter(bestQEpochs['total_time']/60, bestQEpochs['training_error'], color='g',label='Quadratic', marker='x')
 axes[1,0].scatter(bestEpochs['total_time']/60, bestEpochs['training_error'], color='r', label='Conventional')
 axes[1,0].set_title('Optimal Performance and\nTotal Elapsed Time')
 axes[1,0].set_ylabel('Optimal Accuracy\nDuring Training')
@@ -87,15 +87,17 @@ axes[1,0].set_xlabel('Total Training Time (Minutes)')
 
 #make color green for quad and red for conventional for all plots
 axes[1,1].scatter(epochs['delta_time'], epochs['gain'], color='r', label='Conventional')
-axes[1,1].scatter(qEpochs['delta_time'], qEpochs['gain'], color='g',label='Quadratic')
+axes[1,1].scatter(qEpochs['delta_time'], qEpochs['gain'], color='g',label='Quadratic', marker='x')
 axes[1,1].set_title('Changes to Accuracy per Epoch')
 axes[1,1].set_ylabel('Gain in Accuracy')
 axes[1,1].set_xlabel('Epoch Training Duration (Seconds)')
 # axes[3,1].set_xlim([0,5])
 # axes[3,1].set_xticks(np.arange(0,6, step=.5))
+plt.legend()
 plt.tight_layout()
+# plt.show()
 plt.savefig('MassGraphs.png', dpi=600)
-
+"""
 fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10,10))
 
 #make color green for quad and red for conventional for all plots
@@ -107,7 +109,7 @@ axes.set_ylim([0.92,1])
 # axes[0,1].set_xticks(np.arange(0,51, step=5))
 plt.savefig('Boxplot.png', dpi=600)
 
-"""
+
 axes[0,0].plot(epochs['epoch'], epochs['training_error'], color='r', label='Conventional')
 axes[0,0].set_title('Accuracy over Epochs')
 axes[0,0].set_ylabel('Loss')

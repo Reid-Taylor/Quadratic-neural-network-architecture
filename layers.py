@@ -32,6 +32,28 @@ class FCLayer(Layer):
         self.bias -= learning_rate * output_error
         return (input_error, self.weights)
 
+class MatrixLayer(Layer):
+    def __init__(self, input_size, output_size):
+        self.input_size = input_size
+        self.output_size = output_size
+        if input_size.__class__ == tuple:
+            (x,y) = input_size
+            self.weights = np.random.rand(x, y, output_size)
+        elif input_size.__class__ == int:
+            self.weights = np.random.rand(input_size, input_size, output_size)
+            input_size = (input_size, input_size)
+        self.bias = np.zeros((1,output_size))
+    def forward_propagation(self,input_data):
+        self.input = input_data
+        self.output = np.expand_dims(np.squeeze(np.tensordot(self.input, self.weights, axes=2)), axis=0) + self.bias
+        return self.output
+    def backward_propagation(self, output_error, learning_rate):
+        weights_error = np.tensordot(np.expand_dims(self.input.T, 2), output_error, axes=1)
+        self.weights -= learning_rate * weights_error
+        self.bias -= learning_rate * output_error
+        input_error = np.squeeze(np.tensordot(output_error, self.weights.T, axes=1))
+        return (input_error, self.weights)
+
 class QuadraticLayer(Layer):
     def __init__(self, input_size, output_size):
         self.input_size = input_size
